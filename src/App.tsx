@@ -1,7 +1,9 @@
 import './App.css'
+import Dropdown from './components/common/Dropdown'
 import MainLayout from './components/common/MainLayout'
 import Panel, { PanelBody, PanelCap, PanelFooter, PanelHeader } from './components/common/Panel'
 import Tabs, { Tab, TabList, TabPanels, TabPenel } from './components/common/Tabs'
+import QuestionEditor from './components/edit/QuestionEditor'
 
 function App() {
 
@@ -14,12 +16,7 @@ function App() {
       </TabList>
       <TabPanels>
         <TabPenel index={0}>
-          <PanelCap>Cap</PanelCap>
-          <Panel>
-            <PanelHeader>Header</PanelHeader>
-            <PanelBody>Body</PanelBody>
-            <PanelFooter>Footer</PanelFooter>
-          </Panel>
+          <QuestionEditor />
         </TabPenel>
         <TabPenel index={1}>Panel 2</TabPenel>
       </TabPanels>
