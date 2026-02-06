@@ -4,6 +4,6 @@ export type QuestionType =
         | 'longText' 
         | 'multipleChoice' 
         | 'checkbox' 
-        |'dropdown' 
+        | 'dropdown' 
         | 'date' 
         | 'time';

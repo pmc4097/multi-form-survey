@@ -1,7 +1,7 @@
 import { PropsWithChildren } from "react";
 import cn from "classnames"
 
-export default function Panel({children, className}: PropsWithChildren<Cn>) {
+export default function Panel({ children, className }: PropsWithChildren<Cn>) {
     return (
         <div className={cn("first-line:flex flex-col p-20 pt-26 bg-white rounded-10", className)}>
             {children}
@@ -9,26 +9,26 @@ export default function Panel({children, className}: PropsWithChildren<Cn>) {
     )
 }
 
-export function PanelHeader({children, className}: PropsWithChildren<Cn>) {
+export function PanelHeader({ children, className }: PropsWithChildren<Cn>) {
     return <div className={className}>{children}</div>;
 }
-export function PanelBody({children, className}: PropsWithChildren<Cn>) {
+export function PanelBody({ children, className }: PropsWithChildren<Cn>) {
     return <div className={className}>{children}</div>;
 }
-export function PanelFooter({children, className}: PropsWithChildren<Cn>) {
+export function PanelFooter({ children, className }: PropsWithChildren<Cn>) {
     return (
         <>
-            <hr className="border-gray-100 mb-20"/>
+            <hr className="border-gray-100 mb-20" />
             <div className={className}>{children}</div>
         </>
     );
 }
 
-export function PanelCap({children}: PropsWithChildren) {
+export function PanelCap({ children }: PropsWithChildren) {
     return (
         <div className="-mb-10 relative">
             <div className="inline-block px-14 pt-10 pb-6 bg-main rounded-t-10 text-15 text-white">{children}</div>
-            <div className="bg-main h-9"/>
+            <div className="bg-main h-9" />
         </div>
     );
 }

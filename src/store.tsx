@@ -5,16 +5,19 @@ import Section from "./models/Section";
 class SurveyStore {
     sections: Section[];
     focusedSectionId: number | null;
-    
+
     constructor() {
-        makeAutoObservable(this); //getter, setter, observable, action 등을 자동으로 추론해서 만들어주는 함수
+        makeAutoObservable(this, {}, { autoBind: true }); //getter, setter, observable, action 등을 자동으로 추론해서 만들어주는 함수
         this.sections = [new Section()];
         this.focusedSectionId = this.sections[0].id;
+    }
+    setFocusedSectionId(id: number) {
+        this.focusedSectionId = id;
     }
     addSection() {
         const section = new Section();
         this.sections.push(section);
-        this.focusedSectionId =section.id;
+        this.focusedSectionId = section.id;
     }
 
     addQuestion() {
@@ -30,7 +33,7 @@ const SurveyStoreContext = createContext(surveyStore);
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const useSurveyStore = () => useContext(SurveyStoreContext);
-export const SurveyStoreProvider = ({children}: PropsWithChildren) => (
+export const SurveyStoreProvider = ({ children }: PropsWithChildren) => (
     <SurveyStoreContext.Provider value={surveyStore}>
         {children}
     </SurveyStoreContext.Provider>

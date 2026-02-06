@@ -2,41 +2,58 @@ import { makeAutoObservable } from "mobx";
 import Question from "./question";
 
 type SectionData = {
-    id: number;
-    title: string;
-    questions: Question[];
-}
+  id: number;
+  title: string;
+  description: string;
+  questions: Question[];
+};
 
 export default class Section implements SectionData {
-    id: number;
-    title: string;
-    questions: Question[];
+  id: number;
+  title: string;
+  description: string;
+  questions: Question[];
 
-    constructor(data: SectionData = {
-        id: Date.now(),
-        title: '',
-        questions: [new Question()]
-    }) {
-        makeAutoObservable(this);
+  constructor(
+    data: SectionData = {
+      id: Date.now(),
+      title: "",
+      description: "",
+      questions: [new Question()],
+    },
+  ) {
+    makeAutoObservable(this, {}, { autoBind: true });
 
-        this.id = data.id;
-        this.title = data.title;
-        this.questions = data.questions;
-    }
+    this.id = data.id;
+    this.title = data.title;
+    this.description = data.description;
+    this.questions = data.questions;
+  }
 
-    addQuestion() {
-        this.questions.push(new Question());
-    }
+  setTitle(title: string) {
+    this.title = title;
+  }
 
-    removeQuestion(id: number) {
-        this.questions = this.questions.filter(q => q.id !== id);
-    }
+  setDescription(description: string) {
+    this.description = description;
+  }
 
-    copyQuestion(id: number) {
-        const question = this.questions.find(q => q.id === id);
-        if (question) this.questions.push(new Question({
-            ...question,
-            id: Date.now()
-        }));
-    }
+  addQuestion() {
+    this.questions.push(new Question());
+  }
+
+  removeQuestion(id: number) {
+    this.questions = this.questions.filter((q) => q.id !== id);
+  }
+
+  copyQuestion(id: number) {
+    const question = this.questions.find((q) => q.id === id);
+    if (question)
+      this.questions.push(
+        new Question({
+          ...question,
+          id: Date.now(),
+        }),
+      );
+  }
 }
