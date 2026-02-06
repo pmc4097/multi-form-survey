@@ -1,10 +1,11 @@
 import { Route, Routes } from 'react-router'
 import './App.css'
 import MainLayout from './components/common/MainLayout'
-import SectionEditorList from './components/edit/SectionEditorList'
 import { SurveyStoreProvider } from './store'
 import AdminPage from './pages/AdminPage'
 import { BrowserRouter } from 'react-router-dom'
+import CreatePage from './pages/CreatePage'
+import EditPage from './pages/EditPage'
 
 function App() {
 
@@ -13,8 +14,9 @@ function App() {
       <MainLayout>
         <SurveyStoreProvider>
           <Routes>
+            <Route path="/surveys/new" element={<CreatePage />} />
             <Route path="/surveys/:surveyId" element={<AdminPage />} >
-              <Route path="edit" element={<SectionEditorList />} />
+              <Route path="/surveys/:surveyId/edit" element={<EditPage />} />
               <Route path="responses" element={<div>응답</div>} />
             </Route>
           </Routes>
