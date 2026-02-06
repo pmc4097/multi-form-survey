@@ -8,8 +8,8 @@ interface QuestionBodyEditorProps {
 }
 
 export default function QuestionBodyEditor({ type }: QuestionBodyEditorProps) {
-    
-    switch(type) {
+
+    switch (type) {
         case 'shortText':
             return <div>shortText</div>;
         case 'longText':

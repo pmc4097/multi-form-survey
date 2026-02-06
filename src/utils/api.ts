@@ -1,5 +1,5 @@
 type ApiParams = {
-  method?: "GET" | "POST" | "PUT" | "DELETE";
+  method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
   body?: object;
   baseUrl?: string;
 };

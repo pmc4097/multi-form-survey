@@ -28,7 +28,7 @@ const QuestionEditor = observer(({ question, onCopy, onDelete }: Props) => {
             <PanelBody>
                 <QuestionBodyEditor type={question.type} />
             </PanelBody>
-            <PanelFooter className="flex justify-end gap-24 h-24">
+            <PanelFooter className="flex justify-end gap-24 h-24 mt-20">
                 <button onClick={() => onCopy(question.id)}><CopyIcon /></button>
                 <button onClick={() => onDelete(question.id)}><DeleteIcon /></button>
                 <Divider direction="vertical" />
