@@ -1,13 +1,16 @@
+
 import Section from "../../models/Section";
 import Panel, { PanelBody, PanelCap } from "../common/Panel";
+
 interface Props {
+    capTitle: string;
     section: Section;
 }
 
-function SectionTitleView({ section }: Props) {
+export default function SectionTitleView({ capTitle, section }: Props) {
     return (
         <div>
-            <PanelCap />
+            <PanelCap>{capTitle}</PanelCap>
             <Panel>
                 <PanelBody className="flex flex-col">
                     <h4 className="mb-17 text-24 text-gray-900 font-semibold">
@@ -21,5 +24,3 @@ function SectionTitleView({ section }: Props) {
         </div>
     )
 }
-
-export default SectionTitleView
