@@ -1,20 +1,12 @@
 import { makeAutoObservable } from "mobx";
-import { QuestionType } from "../types/app";
-
-type QuestionData = {
-  id: number;
-  title: string;
-  type: QuestionType;
-  required: boolean;
-  options?: string[];
-};
+import { Option, QuestionData, QuestionType } from "../types/app";
 
 export default class Question implements QuestionData {
   id: number;
   title: string;
   type: QuestionType;
   required: boolean;
-  options: string[] | undefined;
+  options: Option[] | undefined;
 
   constructor(
     data: QuestionData = {
@@ -29,6 +21,7 @@ export default class Question implements QuestionData {
     this.title = data.title;
     this.type = data.type;
     this.required = data.required;
+    this.options = data.options;
   }
 
   setTitle(title: string) {
@@ -42,7 +35,7 @@ export default class Question implements QuestionData {
       type === "checkbox" ||
       type === "dropdown"
     ) {
-      this.options = this.options ?? [""];
+      this.options = this.options ?? [];
     } else {
       this.options = undefined;
     }
@@ -50,8 +43,15 @@ export default class Question implements QuestionData {
   setRequired(required: boolean) {
     this.required = required;
   }
-  setOptions(options: string[]) {
+  setOptions(options: Option[]) {
     this.options = options;
   }
-  //TODO:  하나의 옵션을 변경 할 수 있도록 하는 메소드 추가
+  setOption(id: string, option: string) {
+    if (this.options) {
+      const index = this.options.findIndex((opt) => opt.id === id);
+      if (index !== -1) {
+        this.options[index].value = option;
+      }
+    }
+  }
 }

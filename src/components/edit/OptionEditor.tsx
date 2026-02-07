@@ -1,5 +1,5 @@
 import { memo, ReactNode, useState } from "react";
-import { QuestionType } from "../../types/app";
+import { Option, QuestionType } from "../../types/app";
 import Input from "../common/Input";
 import RadioIcon from '../../assets/icons/radio_button_unchecked.svg?react';
 import CheckboxIcon from '../../assets/icons/check_box_outline_blank.svg?react';
@@ -10,17 +10,13 @@ import { verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { GripVerticalIcon } from 'lucide-react';
 import { PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { restrictToVerticalAxis, restrictToParentElement } from '@dnd-kit/modifiers';
+import Question from "../../models/question";
+import { observer } from "mobx-react-lite";
 
 interface OptionEditorProps {
-    //type: 'multipleChoice' | 'checkbox' | 'dropdown';
-    type: QuestionType
+  //type: 'multipleChoice' | 'checkbox' | 'dropdown';
+  question: Question;
 }
-
-type Option = {
-  id: string;
-  value: string;
-};
-
 interface SortableItemProps {
   id: string;
   children: ReactNode;
@@ -32,85 +28,86 @@ interface OptionRowProps {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>, id: string) => void;
 }
 
-export default function OptionEditor({ type }: OptionEditorProps) {
-    const [options, setOptions] = useState<Option[]>([]);
-    const [activeOption, setActiveOption] = useState<Option | null>(null);
+const OptionEditor = observer(function ({ question: { options = [], type, setOptions, setOption } }: OptionEditorProps) {
+  const [activeOption, setActiveOption] = useState<Option | null>(null);
 
-    const sensors = useSensors(
-        useSensor(PointerSensor, {
-            activationConstraint: {
-            distance: 6,
-            },
-        })
-    );
-    const handleDragEnd = (event: DragEndEvent) => {
-        const { active, over } = event;
-        if (!over || active.id === over.id) return;
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 6,
+      },
+    })
+  );
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
 
-        setOptions(prev => {
-            const oldIndex = prev.findIndex(o => o.id === active.id);
-            const newIndex = prev.findIndex(o => o.id === over.id);
-            return arrayMove(prev, oldIndex, newIndex);
-        });
-        setActiveOption(null);
-    };
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
-        setOptions(prev => prev.map(o => (o.id === id ? { ...o, value: e.target.value } : o)));
-    };
+    const oldIndex = options.findIndex(o => o.id === active.id);
+    const newIndex = options.findIndex(o => o.id === over.id);
+    setOptions(arrayMove(options, oldIndex, newIndex));
+    setActiveOption(null);
+  };
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
+    setOption(id, e.currentTarget.value);
+  };
+  return (
+    <div>
+      <DndContext
+        sensors={sensors}
+        modifiers={[
+          restrictToVerticalAxis,
+          restrictToParentElement,
+        ]}
+        onDragStart={e => {
+          const id = e.active.id as string;
+          setActiveOption(options.find(o => o.id === id) ?? null);
+        }}
+        onDragEnd={handleDragEnd}
+        onDragCancel={() => { setActiveOption(null) }}
+      >
+        <SortableContext
+          items={options.map(o => o.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          {options.map(option => (
 
-    return (
-        <div>
-            <DndContext
-                sensors={sensors}
-                modifiers={[
-                            restrictToVerticalAxis,
-                            restrictToParentElement,
-                          ]}
-                onDragStart={e => {
-                    const id = e.active.id as string;
-                    setActiveOption(options.find(o => o.id === id) ?? null);
-                }}
-                onDragEnd={ handleDragEnd }
-                onDragCancel={() => { setActiveOption(null) }}
-                >
-                <SortableContext
-                    items={options.map(o => o.id)}
-                    strategy={verticalListSortingStrategy}
-                >
-                    {options.map(option => (
-                    <SortableItem 
-                      key={option.id}
-                      id={option.id}>
-                        <OptionRow option={option} type={type} onChange={handleInputChange}  />
-                    </SortableItem>
-                    ))}
-                </SortableContext>
-                <DragOverlay>
-                    {activeOption ? (
-                        <div className="opacity-80 shadow-lg bg-white rounded-md">
-                        <OptionRow option={activeOption} type={type} />
-                        </div>
-                    ) : null}
-                </DragOverlay>
-            </DndContext>
-            <div className="flex items-center mt-28">
-             {icons[type]}
-            <button 
-                className="text-gray-500 text-16"
-                onClick={() => {
-                    setOptions(prv => [...prv, {id: crypto.randomUUID(), value: ''}]);
-                }}
-            >
-                옵션추가</button>
+            <SortableItem
+              key={option.id}
+              id={option.id}>
+              <div className="flex items-center">
+                {icons[type]}
+                <Input value={option.value} onChange={(e) => handleInputChange(e, option.id)} />
+              </div>
+            </SortableItem>
+          ))}
+        </SortableContext>
+        <DragOverlay>
+          {activeOption ? (
+            <div className="opacity-80 shadow-lg bg-white rounded-md">
+              <OptionRow option={activeOption} type={type} />
             </div>
-        </div>
-    );
-}
+          ) : null}
+        </DragOverlay>
+      </DndContext>
+      <div className="flex items-center mt-28">
+        {icons[type]}
+        <button
+          className="text-gray-500 text-16"
+          onClick={() => {
+            setOptions([...options, { id: crypto.randomUUID(), value: '' }]);
+          }}
+        >
+          옵션추가</button>
+      </div>
+    </div>
+  );
+});
+export default OptionEditor;
 
 const icons: Partial<Record<QuestionType, ReactNode>> = {
-    'multipleChoice': <RadioIcon className="mr-14" />,
-    'checkbox': <CheckboxIcon className="mr-14" />,
-    'dropdown': <RadioIcon className="mr-14" />
+  'multipleChoice': <RadioIcon className="mr-14" />,
+  'checkbox': <CheckboxIcon className="mr-14" />,
+  'dropdown': <RadioIcon className="mr-14" />
 }
 
 const SortableItem = memo(function SortableItem({ id, children }: SortableItemProps) {

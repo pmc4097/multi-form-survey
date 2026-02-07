@@ -1,5 +1,5 @@
 import { toJS } from "mobx";
-import SectionEditorList from "../components/edit/SectionEditorList";
+import SectionListEditor from "../components/edit/SectionListEditor";
 import { useSurveyStore } from "../store";
 import callApi from "../utils/api";
 import { useEffect, useState } from "react";
@@ -36,7 +36,7 @@ export default function EditPage() {
             <Button
                 className="absolute top-0 right-0"
                 onClick={handleSubmit} >보내기</Button>
-            <SectionEditorList />
+            <SectionListEditor />
             <Modal opened={opened}>
                 <SendModalContents
                     emailCollected={surveyStore.emailCollected}

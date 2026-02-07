@@ -18,7 +18,6 @@ interface Props {
 
 
 const QuestionEditor = observer(({ question, onCopy, onDelete }: Props) => {
-
     return (
         <Panel className="border-l-10 border-l-transparent focus-within:border-l-main">
             <PanelHeader className="flex mb-25">
@@ -26,7 +25,7 @@ const QuestionEditor = observer(({ question, onCopy, onDelete }: Props) => {
                 <QuestionTypeEditor type={question.type} onChange={question.setType} />
             </PanelHeader>
             <PanelBody>
-                <QuestionBodyEditor type={question.type} />
+                <QuestionBodyEditor question={question} />
             </PanelBody>
             <PanelFooter className="flex justify-end gap-24 h-24 mt-20">
                 <button onClick={() => onCopy(question.id)}><CopyIcon /></button>

@@ -10,7 +10,6 @@ interface Props {
 }
 
 const SectionEditor = observer(function SectionEditor({ section, capTitle, onChangeFocus }: Props) {
-
     const handleClickContainer = () => {
         onChangeFocus(section.id);
     }
